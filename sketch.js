@@ -1,12 +1,4 @@
-/*
-  SEA Happiness · 2025 (p5.js)
-  - Mobile (<700px): donut centered at top, metric pill under it, FULL-WIDTH horizontal bars BELOW the donut
-  - Desktop: donut left, vertical bars right; wrapped toolbar with gutter label
-  - Opaque modal; modal handles clicks/taps before toolbar/pill
-  - Single setup() + responsive reflow
-*/
 
-// ---------- Data ----------
 let SEA_DATA = [
   { country: "Myanmar",     score: 4.360, gdp: 0.710, support: 1.181, health: 0.555, freedom: 0.525, generosity: 0.566, corruption: 0.172 },
   { country: "Cambodia",    score: 4.476, gdp: 0.603, support: 1.184, health: 0.633, freedom: 0.605, generosity: 0.287, corruption: 0.046 },
@@ -19,7 +11,7 @@ let SEA_DATA = [
   { country: "Singapore",   score: 6.262, gdp: 1.574, support: 1.306, health: 1.141, freedom: 0.549, generosity: 0.271, corruption: 0.464 }
 ];
 
-// ---------- Palette ----------
+
 const SODARO = { accent:[6,182,255], dark:[26,30,38] };
 const colors = {
   barBase: 48,
