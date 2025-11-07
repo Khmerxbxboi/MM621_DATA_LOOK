@@ -419,7 +419,7 @@
       expanded ? closeFooter() : openFooter();
     });
 
-    // Close footer if user taps outside of it (but not the toggle)
+
     document.addEventListener('click', (e)=>{
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       if (!expanded) return;
@@ -428,7 +428,7 @@
       if (!withinFooter && !isToggle) closeFooter();
     }, { passive:true });
 
-    // Keep footer open above the keyboard; optional adjustments could go here
+
     if (window.visualViewport){
       visualViewport.addEventListener('resize', ()=>{ /* no-op */ });
     }
