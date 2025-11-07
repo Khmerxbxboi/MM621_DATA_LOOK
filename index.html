@@ -20,7 +20,7 @@
       --brand:#0CAFFF; --muted:#1f2630; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-top: env(safe-area-inset-top, 0px);
-      --vh: 100vh; /* replaced by visualViewport height */
+      --vh: 100vh;
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -39,15 +39,20 @@
 
     header{
       position:relative; z-index:1;
-      display:flex; align-items:center; justify-content:space-between;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding:calc(12px + var(--safe-top)) clamp(12px,4vw,28px) 12px;
       transition: opacity .25s ease;
     }
     .brand{display:flex; flex-direction:column; text-decoration:none; color:var(--fg-1);}
     .title{font-weight:800; font-size:clamp(18px,2.3vw,22px);}
     .subtitle{color:var(--fg-2); font-size:clamp(12px,1.6vw,14px);}
-    .back-link{color:var(--fg-2); text-decoration:none; padding:10px 14px; border:1px solid var(--muted); border-radius:10px;}
-    .back-link:hover{color:var(--fg-1); border-color:#2b3542;}
+
+    .header-actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn-link{
+      color:var(--fg-1); text-decoration:none; padding:10px 14px; border:1px solid var(--muted); border-radius:10px;
+      background:rgba(255,255,255,.02); font-weight:700; font-size:14px;
+    }
+    .btn-link:hover{color:var(--brand); border-color:#2b3542}
 
     .stage{
       position:relative;
@@ -77,7 +82,6 @@
     footer a{color:var(--fg-1); text-decoration:none}
     footer a:hover{color:var(--brand)}
 
-    /* Splash */
     .splash{position:fixed; inset:0; z-index:1000; display:grid; place-items:center;
       background:radial-gradient(1600px 800px at 50% -10%, #10151d 0%, transparent 65%), #04070b;
       animation:splashFadeOut .4s ease forwards; animation-delay:1.2s;}
@@ -89,7 +93,6 @@
     @keyframes splashFadeOut{to{opacity:0;pointer-events:none}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-    /* Sign-in gate */
     .gate{position:fixed; inset:0; z-index:900; display:grid; place-items:center;
       background:
         radial-gradient(1100px 600px at 15% -10%,rgba(40,80,110,.35) 0%,transparent 60%),
@@ -119,77 +122,30 @@
     .btn:hover{border-color:var(--brand); color:var(--brand)}
     .error{color:#ff7a7a; font-size:13px; min-height:18px}
 
-    /* --- Mobile-only footer toggle & chrome dim + tighter header --- */
     @media(max-width:720px){
       .subtitle{display:none}
-
-      /* tighter vertical rhythm */
       body{ gap:8px; }
-
-      /* slimmer header */
-      header{
-        padding: calc(6px + var(--safe-top)) 10px 6px;
-      }
+      header{ padding: calc(6px + var(--safe-top)) 10px 6px; }
       .title{ font-size: clamp(14px, 4.2vw, 18px); }
-
-      /* compact back link */
-      .back-link{
-        padding: 6px 10px;
-        font-size: 12px;
-        border-radius: 8px;
-      }
-
-      /* pull the stage closer for a taller canvas view */
+      .btn-link{ padding: 6px 10px; font-size:12px; border-radius:8px; }
       .stage{ padding:10px; margin: 0 10px; }
-
       footer{font-size:13px; gap:8px}
-
-      /* footer behaves like a slide-up sheet on mobile */
       footer{
-        position: fixed;
-        left: 12px; right: 12px;
-        bottom: 12px;
-        z-index: 940;
-        transform: translateY(110%);
-        opacity: 0;
-        pointer-events: none;
+        position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 940;
+        transform: translateY(110%); opacity: 0; pointer-events: none;
       }
-      footer.show{
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      /* floating toggle button */
+      footer.show{ transform: translateY(0); opacity: 1; pointer-events: auto; }
       .footer-toggle{
-        position: fixed;
-        right: 14px;
-        bottom: calc(14px + var(--safe-bottom));
-        z-index: 950;
-        padding: 10px 12px;
-        font-weight: 800;
-        font-size: 13px;
-        border-radius: 12px;
-        border: 1px solid #2b3542;
-        background: rgba(255,255,255,.04);
-        color: var(--fg-1);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(6px);
+        position: fixed; right: 14px; bottom: calc(14px + var(--safe-bottom)); z-index: 950;
+        padding: 10px 12px; font-weight: 800; font-size: 13px; border-radius: 12px;
+        border: 1px solid #2b3542; background: rgba(255,255,255,.04); color: var(--fg-1);
+        box-shadow: var(--shadow); backdrop-filter: blur(6px);
       }
-      .footer-toggle[aria-expanded="true"]{
-        color: var(--brand);
-        border-color: var(--brand);
-      }
-
-      /* dim chrome when footer hidden */
+      .footer-toggle[aria-expanded="true"]{ color: var(--brand); border-color: var(--brand); }
       body.chrome-dim header{ opacity:.6; }
       body.chrome-dim .stage{ box-shadow: 0 16px 50px rgba(0,0,0,.55); }
     }
-
-    /* hide back link on very small phones for extra space */
-    @media(max-width:480px){
-      .back-link{display:none}
-    }
+    @media(max-width:480px){ .btn-link.back{display:none} }
   </style>
 </head>
 <body>
@@ -198,7 +154,10 @@
       <div class="title">Harmony & Data · SEA Happiness Study 2019</div>
       <div class="subtitle">Interaction Design Data Visualization</div>
     </a>
-    <a class="back-link" href="https://www.jayaproduction.com">← Back</a>
+    <div class="header-actions">
+      <a class="btn-link primary" href="https://khmerxbxboi.github.io/MM621_Project-2-Data-Visualization/" target="_blank" rel="noopener">MAIN LOOK WITH AI HELP</a>
+      <a class="btn-link back" href="https://www.jayaproduction.com" target="_blank" rel="noopener">← Back</a>
+    </div>
   </header>
 
   <!-- Splash -->
@@ -236,8 +195,8 @@
   <footer id="pageFooter" aria-hidden="true">
     <div>© <span id="year"></span> Bullimalinna Sot · Interaction Design & Interactive Art MM621 — “Designing happiness, not just pixels.”</div>
     <div class="footer-links">
-      <a href="https://worldhappiness.report/ed/2019/" target="_blank">🌏 2019 Data Source</a> ·
-      <a href="https://github.com/khmerxbxboi/MM621_Project-2-Data-Visualization" target="_blank">GitHub Repo</a> ·
+      <a href="https://worldhappiness.report/ed/2019/" target="_blank" rel="noopener">🌏 2019 Data Source</a> ·
+      <a href="https://github.com/khmerxbxboi/MM621_Project-2-Data-Visualization" target="_blank" rel="noopener">GitHub Repo</a> ·
       <a href="inspiration.html">💡 Inspiration</a>
     </div>
   </footer>
@@ -248,7 +207,7 @@
   </button>
 
 <script>
-  // ---------- true 100vh on mobile (keyboard safe) ----------
+  // ---------- true 100vh on mobile ----------
   function setVh() {
     const vv = window.visualViewport;
     const h = vv ? vv.height : window.innerHeight;
@@ -267,7 +226,6 @@
     const canv = document.querySelector("canvas");
     if (app && canv && !app.contains(canv)) app.appendChild(canv);
 
-    // Only prevent scrolling when the finger is on the canvas
     if (canv) {
       canv.addEventListener('touchmove', (e) => e.preventDefault(), { passive:false });
     }
@@ -298,7 +256,6 @@
     gate.style.opacity = "1";
     gate.style.pointerEvents = "auto";
     setTimeout(()=> { logo.style.opacity = "1"; }, 80);
-    // Focus safely above keyboard
     setTimeout(()=> {
       input?.focus({ preventScroll:false });
       input?.scrollIntoView({ block:"center", behavior:"smooth" });
@@ -319,7 +276,6 @@
     rememberBtn.style.color = pressed ? "var(--fg-1)" : "var(--brand)";
   });
 
-  // Keep p5 from stealing input while typing in the gate
   ['keydown','keyup','keypress','input','touchstart','pointerdown','click'].forEach(evt=>{
     document.getElementById('gateForm').addEventListener(evt, e => e.stopPropagation(), true);
   });
@@ -341,7 +297,7 @@
 
   input.addEventListener("keydown", (e)=>{ if (e.key === "Enter") e.target.form.requestSubmit(); });
 
-  // ---------- Voice login (SpeechRecognition) ----------
+  // ---------- Voice login ----------
   (function setupVoice(){
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
@@ -384,7 +340,7 @@
     });
   })();
 
-  // ---------- Mobile-only footer toggle & chrome dim ----------
+  // ---------- Mobile footer toggle ----------
   (function setupFooterToggle(){
     const isMobile = window.matchMedia('(max-width: 720px)').matches;
     const footer = document.getElementById('pageFooter');
@@ -392,10 +348,8 @@
 
     if (!isMobile || !footer || !toggle) return;
 
-    // Show the toggle button on mobile
     toggle.hidden = false;
 
-    // Start with footer hidden and chrome dimmed
     document.body.classList.add('chrome-dim');
     footer.classList.remove('show');
     footer.setAttribute('aria-hidden','true');
@@ -419,7 +373,6 @@
       expanded ? closeFooter() : openFooter();
     });
 
-    // Close footer if user taps outside of it (but not the toggle)
     document.addEventListener('click', (e)=>{
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       if (!expanded) return;
@@ -428,9 +381,8 @@
       if (!withinFooter && !isToggle) closeFooter();
     }, { passive:true });
 
-    // Keep footer open above the keyboard; optional adjustments could go here
     if (window.visualViewport){
-      visualViewport.addEventListener('resize', ()=>{ /* no-op */ });
+      visualViewport.addEventListener('resize', ()=>{ /* keep footer usable over keyboard */ });
     }
   })();
 </script>

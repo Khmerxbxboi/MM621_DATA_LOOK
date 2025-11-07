@@ -1,7 +1,3 @@
-// SEA Happiness (2019) — p5.js dashboard sketch
-// HARD NO-FX: no fades, no shadows, no alpha. Instant redraws only.
-
-// ---------- Fallback Data ----------
 let SEA_DATA = [
   { country:"Myanmar",     score:4.360, gdp:0.710, support:1.181, health:0.555, freedom:0.525, generosity:0.566, corruption:0.172 },
   { country:"Cambodia",    score:4.476, gdp:0.603, support:1.184, health:0.633, freedom:0.605, generosity:0.287, corruption:0.046 },
@@ -19,7 +15,10 @@ const BLUES = ["#0CAFFF","#1E92E0","#36A8FF","#2B8BD1","#56B7FF","#2F7FBF","#4AB
 const ACCENT = [6,182,255];
 const INK = { primary:[245,245,245], secondary:[205,213,224], muted:[165,174,188] };
 
-// Metrics (Anti-Corruption uses WHR "perceptions of corruption" directly)
+
+
+
+
 const METRICS = [
   { key:"score",      label:"Score",           domain:[4.3,6.4],  val:d=>d.score,        fmt:d=>nf(d.score,1,3) },
   { key:"gdp",        label:"GDP",             domain:[0.5,1.6],  val:d=>d.gdp,          fmt:d=>nf(d.gdp,1,3) },
@@ -30,7 +29,9 @@ const METRICS = [
   { key:"antiCorr",   label:"Anti-Corruption", domain:[0.03,0.48],val:d=>d.corruption,   fmt:d=>nf(d.corruption,1,3) }
 ];
 
-// ---------- State / Layout ----------
+
+
+
 let isMobile=false, currentMetric="score";
 let donut={cx:260,cy:320,r:160,ir:98};
 let bars={baselineY:0, barW:56, spacing:86, startX:0, leftMargin:520};
@@ -40,13 +41,21 @@ let pill={bounds:{x:0,y:0,w:0,h:0}, prev:{x:0,y:0,r:0}, next:{x:0,y:0,r:0}};
 let metricButtons=[];
 let aboutOpen=false, infoBtn={x:0,y:0,w:26,h:26};
 
-// ---------- CSV ----------
+// ---------- CSV = IMPORTANT FOR REAL 
 let table2019 = null;
 function preload(){
   table2019 = loadTable('2019.csv','csv','header');
 }
 
-// ---------- Setup ----------
+
+
+
+
+
+
+
+
+
 function setup(){
   const hDesk=min(windowHeight*0.8,820), hMob=max(560, windowHeight*0.98);
   const c = createCanvas(windowWidth*0.98, (windowWidth<700)?hMob:hDesk);
@@ -64,7 +73,9 @@ function windowResized(){
   reflow(); buildButtons();
 }
 
-// ---------- CSV -> SEA_DATA ----------
+
+
+
 function applySEAFrom2019(tbl){
   try{
     if (!tbl || tbl.getRowCount() === 0) return;
@@ -99,7 +110,12 @@ function applySEAFrom2019(tbl){
   }catch(e){ /* keep fallback */ }
 }
 
-// ---------- Layout helpers ----------
+
+
+
+
+
+
 function reflow(){
   isMobile = (width<700);
 
@@ -139,7 +155,9 @@ function reflow(){
   infoBtn.x = 16; infoBtn.y = 16 + (isMobile? 18 : 20) + 8;
 }
 
-// ---------- Metric utilities ----------
+
+
+
 const M = key => METRICS.find(m=>m.key===key);
 const mVal  = (d,key=currentMetric)=> M(key).val(d);
 const mDom  = (key=currentMetric)=> M(key).domain;
@@ -151,21 +169,20 @@ function valueToH(v){
   return map(v,mn,mx,minH,maxH,true);
 }
 
-// ---------- Draw ----------
+
 function draw(){
-  // FULL CLEAR every frame with an opaque background (no trails)
+
   background(11, 15, 20);
 
-  // Solid background striping (no alpha)
   stroke(8,12,18);
-  for(let y=0;y<height;y+=2){ line(0,y,width,y); } // fewer lines for perf and no translucency
+  for(let y=0;y<height;y+=2){ line(0,y,width,y); } 
 
   const title = `Southeast Asia — Happiness by ${mLabel()} (2019)`;
   noStroke(); fill(...INK.primary); textAlign(LEFT,TOP);
   textSize(isMobile?18:20); textStyle(BOLD);
   text(title, 16, 16);
 
-  // info badge
+ 
   const badgeX = 16 + textWidth(title) + 10;
   drawInfoBadge(badgeX, 18);
 
@@ -174,31 +191,30 @@ function draw(){
                : "Click bars for details • Use toolbar for metrics",
        16, isMobile?40:44);
 
-  // Hovers (instant)
+
   hoverSlice = donutHit(mouseX,mouseY);
   hoverBar   = isMobile ? barHitMobile(mouseX,mouseY) : barHitDesktop(mouseX,mouseY);
   const hover = (hoverBar>=0)? hoverBar : (selected<0 ? hoverSlice : -1);
 
-  // Viz
+
   drawDonut(hover);
   if(isMobile) drawBarsMobile(hover); else drawBarsDesktop(hover);
   if(isMobile) drawPill(); else drawToolbar();
 
-  // Detail modal (instant)
   if(selected>=0) drawModal(selected);
 
-  // About overlay (instant)
+ 
   if(aboutOpen) drawAbout();
 }
 
-// ---------- Donut ----------
+
 function drawDonut(hover){
   const vals = SEA_DATA.map(d=>max(0.0001, mVal(d)));
   const total = vals.reduce((a,b)=>a+b,0);
 
   let a0 = -HALF_PI;
 
-  // NO drop shadow, NO alpha
+
   for(let i=0;i<SEA_DATA.length;i++){
     const a = (vals[i]/total)*TWO_PI;
     const active = (selected>=0? i===selected : i===hover);
@@ -208,7 +224,7 @@ function drawDonut(hover){
     a0 += a;
   }
 
-  // Solid center cap
+
   noStroke(); fill(11,15,20);
   ellipse(donut.cx, donut.cy, donut.ir*1.46, donut.ir*1.46);
 
@@ -229,7 +245,9 @@ function ringSlice(cx,cy,or,ir,a,b){
   endShape(CLOSE);
 }
 
-// ---------- Bars — Desktop (solid, instant) ----------
+
+
+
 function drawBarsDesktop(hover){
   textAlign(CENTER,BOTTOM);
   for(let i=0;i<SEA_DATA.length;i++){
@@ -248,9 +266,12 @@ function drawBarsDesktop(hover){
   }
 }
 
-// ---------- Bars — Mobile (solid, instant) ----------
+
+
 function drawBarsMobile(hover){
-  // Solid panel
+
+
+
   noStroke(); fill(18,22,29);
   rect(rightPanel.x - 2, rightPanel.y - 6, rightPanel.w + 4, rightPanel.h + 12, 10);
 
@@ -268,25 +289,30 @@ function drawBarsMobile(hover){
     const rowY = top + i * (rightPanel.rowH + rightPanel.gap);
     if (rowY > rightPanel.y + rightPanel.h + 30) break;
 
-    // row background (opaque)
+
+
     noStroke(); fill(26,28,34);
     rect(rightPanel.x+3, rowY- rightPanel.rowH/2 + 2, rightPanel.w-6, rightPanel.rowH, 6);
 
-    // label
+
+
+
     fill(230); textSize(11);
     text(d.country, rightPanel.x + innerPad, rowY);
 
-    // bar
+
+
+
     const val = mVal(d);
     const wBar = map(val, mn, mx, 0, barMaxW, true);
     const bx = rightPanel.x + innerPad + 78;
     const by = rowY - 6;
     noStroke();
-    fill(36,40,48); rect(bx, by, barMaxW, 12, 6); // track (opaque)
+    fill(36,40,48); rect(bx, by, barMaxW, 12, 6); 
     if (i===selected || i===hover) fill(...ACCENT); else fill(120);
     rect(bx, by, wBar, 12, 6);
 
-    // value
+
     textAlign(RIGHT, CENTER);
     fill(...INK.muted);
     textSize(10.5);
@@ -296,7 +322,8 @@ function drawBarsMobile(hover){
   }
 }
 
-// ---------- Toolbar / Pill ----------
+
+
 function buildButtons(){
   metricButtons.length=0; if(isMobile) return;
   const barX = bars.leftMargin + 10, barW = width - bars.leftMargin - 56, barY=height-78, barH=56;
@@ -350,12 +377,12 @@ function drawPill(){
   line(pill.next.x-3,pill.next.y+4, pill.next.x+3,pill.next.y);
 }
 
-// ---------- Modal (detail per country) — instant, solid ----------
+
 function drawModal(idx){
   if(idx<0) return;
   const d=SEA_DATA[idx];
 
-  // Solid backdrop
+
   noStroke(); fill(0); rect(0,0,width,height);
 
   const W = isMobile? min(380,width-32) : min(740,width-64);
@@ -428,7 +455,9 @@ function explain(d){
   return `Strong ${a} and solid ${b}, ${trust}, help shape the overall score.`;
 }
 
-// ---------- About overlay (solid) ----------
+
+
+
 function drawInfoBadge(x,y){
   infoBtn={x:x,y:y,w:26,h:26};
   noStroke(); fill(20,24,30); rect(x,y,26,26,8);
@@ -491,7 +520,18 @@ function drawSection(W, y, title, body){
   text(body, 20, y+20, W-40);
 }
 
-// ---------- Interaction ----------
+
+
+
+
+
+
+
+
+
+
+
+
 function mousePressed(){
   if(aboutOpen){ aboutOpen=false; return; }
 
