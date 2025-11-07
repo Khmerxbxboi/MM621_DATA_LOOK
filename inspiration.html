@@ -64,16 +64,12 @@
 
     .bars{display:grid; gap:14px; margin-top:6px}
     .barRow{display:flex; align-items:center; gap:14px}
-.barLabel{min-width:110px; font-weight:700; letter-spacing:.2px; color:var(--ink)}
-@media (max-width:520px){ .barLabel{min-width:86px; font-size:12px} }
-.barTrack{position:relative; flex:1; height:18px; border-radius:999px; background:#0c121b; border:1px solid #142233; overflow:hidden}
-.barFill{position:absolute; inset:0 auto 0 0; width:var(--w,0%); background:linear-gradient(90deg, rgba(12,175,255,.18), rgba(12,175,255,.98)); box-shadow:inset 0 0 16px rgba(12,175,255,.45); transition:width .35s ease}
-.barTrack:hover .barFill{filter:saturate(1.1)}
-.barValue{margin-left:8px; font-size:12px; font-weight:800; color:var(--ink); padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid #1e2e40}
-    /* removed old inner span rule (now .barFill) */
-    /* replaced by .barTrack:hover .barFill */
-    /* label now sits outside track as .barLabel */
-    /* value now shown as .barValue */
+    .barLabel{min-width:110px; font-weight:700; letter-spacing:.2px; color:var(--ink)}
+    @media (max-width:520px){ .barLabel{min-width:86px; font-size:12px} }
+    .barTrack{position:relative; flex:1; height:18px; border-radius:999px; background:#0c121b; border:1px solid #142233; overflow:hidden}
+    .barFill{position:absolute; inset:0 auto 0 0; width:var(--w,0%); background:linear-gradient(90deg, rgba(12,175,255,.18), rgba(12,175,255,.98)); box-shadow:inset 0 0 16px rgba(12,175,255,.45); transition:width .35s ease}
+    .barTrack:hover .barFill{filter:saturate(1.1)}
+    .barValue{margin-left:8px; font-size:12px; font-weight:800; color:var(--ink); padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid #1e2e40}
 
     .labels{display:flex; justify-content:space-between; color:var(--muted); font-size:12px; margin-top:6px}
     .legend{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
@@ -113,8 +109,7 @@
 <body>
   <header>
     <div class="title">Inspiration</div>
-  <a class="back" href="https://khmerxbxboi.github.io/MM621_Project-2-Data-Visualization/">← Back to Visualization</a>
-
+    <a class="back" href="https://khmerxbxboi.github.io/MM621_Project-2-Data-Visualization/">← Back to Visualization</a>
   </header>
 
   <main>
@@ -122,38 +117,45 @@
     <h1>Design & Data Visualization Inspiration</h1>
     <p class="sub">References that blend storytelling, interaction, and clean data design.</p>
 
-    <!-- Core inspiration (links) -->
+    <!-- Core inspiration (updated links) -->
     <section class="grid" aria-label="Inspiration links">
-      <a class="card" href="https://observablehq.com/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Observable HQ</span><span class="desc">Notebook-driven data exploration</span></div>
+      <a class="card" href="https://editor.p5js.org/jsarachan/sketches/ry8TEc_0b" target="_blank" rel="noopener">
+        <div class="meta">
+          <span class="name">p5.js Sketch · jsarachan</span>
+          <span class="desc">Compact interactive study in p5.js editor</span>
+        </div>
         <span class="pill">Open</span>
       </a>
-      <a class="card" href="https://ourworldindata.org/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Our World in Data</span><span class="desc">Happiness research & indicators</span></div>
+
+      <a class="card" href="https://editor.p5js.org/bobbytux/sketches/isdsojlcC" target="_blank" rel="noopener">
+        <div class="meta">
+          <span class="name">p5.js Sketch · bobbytux</span>
+          <span class="desc">Generative/interactive sketch inspiration</span>
+        </div>
         <span class="pill">Open</span>
       </a>
-      <a class="card" href="https://datavizproject.com/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Data Viz Project</span><span class="desc">Chart types & use cases</span></div>
+
+      <a class="card" href="https://editor.p5js.org/jeffThompson/sketches/BoyLuGrCV" target="_blank" rel="noopener">
+        <div class="meta">
+          <span class="name">p5.js Sketch · Jeff Thompson</span>
+          <span class="desc">Creative coding patterns & techniques</span>
+        </div>
         <span class="pill">Open</span>
       </a>
-      <a class="card" href="https://pudding.cool/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">The Pudding</span><span class="desc">Data-driven stories</span></div>
+
+      <a class="card" href="https://www.uxpin.com/studio/blog/dashboard-design-principles/" target="_blank" rel="noopener">
+        <div class="meta">
+          <span class="name">UXPin · Dashboard Design Principles</span>
+          <span class="desc">Layout, hierarchy, and clarity guidelines</span>
+        </div>
         <span class="pill">Open</span>
       </a>
-      <a class="card" href="https://informationisbeautiful.net/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Information Is Beautiful</span><span class="desc">Visual explainers & ideas</span></div>
-        <span class="pill">Open</span>
-      </a>
-      <a class="card" href="https://threejs.org/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Three.js</span><span class="desc">WebGL 3D for the web</span></div>
-        <span class="pill">Open</span>
-      </a>
-      <a class="card" href="https://figr.design/blog/dashboard-design-best-practices" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Dashboard Best Practices</span><span class="desc">Figr · layout & clarity tips</span></div>
-        <span class="pill">Open</span>
-      </a>
+
       <a class="card" href="https://www.youtube.com/watch?v=B7k5rOgmOGY" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">YouTube: D3 (video)</span><span class="desc">Hands‑on data viz walkthrough</span></div>
+        <div class="meta">
+          <span class="name">YouTube · D3.js Walkthrough</span>
+          <span class="desc">Hands-on data-viz concepts and patterns</span>
+        </div>
         <span class="pill">Open</span>
       </a>
     </section>
@@ -182,34 +184,34 @@
       <div class="bars" id="bars" role="group" aria-label="Happiness factors">
         <!-- Bars are injected by JS -->
       </div>
-      <div class="labels"><span>Higher well‑being</span><span>Lower</span></div>
+      <div class="labels"><span>Higher well-being</span><span>Lower</span></div>
       <div class="legend" id="legend" aria-label="Toggle metric highlight">
         <span class="tag" data-metric="GDP">GDP</span>
         <span class="tag" data-metric="Support">Support</span>
         <span class="tag" data-metric="Health">Health</span>
         <span class="tag" data-metric="Freedom">Freedom</span>
       </div>
-      <p class="note">Tip: drag the slider or tap ◀ ▶ to switch countries. Tap a legend chip to highlight a metric. Long‑press / hover a bar for a tooltip. Mobile‑friendly, no libraries.</p>
+      <p class="note">Tip: drag the slider or tap ◀ ▶ to switch countries. Tap a legend chip to highlight a metric. Long-press / hover a bar for a tooltip. Mobile-friendly, no libraries.</p>
       <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
     </section>
 
     <!-- Build the data (fetch + viz libs) -->
     <div class="section-title"><h2>Build the Data</h2></div>
     <section class="grid" aria-label="Build the data links">
-      <a class="card" href="https://editor.p5js.org/jsarachan/sketches/ry8TEc_0b" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">P5.js for simple Data look</span><span class="desc">P5.JS for Data Visualization</span></div>
+      <a class="card" href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">MDN · Fetch()</span><span class="desc">Load JSON from files/APIs</span></div>
         <span class="pill">Open</span>
       </a>
       <a class="card" href="https://d3js.org/" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">D3.js</span><span class="desc">Low‑level, powerful data‑viz</span></div>
+        <div class="meta"><span class="name">D3.js</span><span class="desc">Low-level, powerful data-viz</span></div>
         <span class="pill">Open</span>
       </a>
-      <a class="card" href="https://editor.p5js.org/jeffThompson/sketches/BoyLuGrCV" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Fade Graph</span><span class="desc">Fade Graph Bar</span></div>
+      <a class="card" href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Vega-Lite</span><span class="desc">Declarative charts fast</span></div>
         <span class="pill">Open</span>
       </a>
-      <a class="card" href="https://editor.p5js.org/codingJM/sketches/kKhO-GWex" target="_blank" rel="noopener">
-        <div class="meta"><span class="name">Pie</span><span class="desc">Treat a sheet like a dataset</span></div>
+      <a class="card" href="https://developers.google.com/sheets/api/quickstart/js" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Google Sheets API</span><span class="desc">Treat a sheet like a dataset</span></div>
         <span class="pill">Open</span>
       </a>
       <a class="card" href="https://supabase.com/docs/guides/auth" target="_blank" rel="noopener">
@@ -227,11 +229,11 @@
       <h2>Auth — Simple Login (Vanilla JS)</h2>
       <div class="actions">
         <button id="openLogin" class="btn">Open Demo</button>
-        <!-- Request: link to step‑by‑step guide -->
-        <a id="openLoginHowto" class="btn" href="#login-howto">Step‑by‑step: Build this login</a>
+        <!-- Request: link to step-by-step guide -->
+        <a id="openLoginHowto" class="btn" href="#login-howto">Step-by-step: Build this login</a>
       </div>
     </div>
-    <p class="note">Front‑end only example: validates email + password, then stores a fake session in <code>localStorage</code>. Swap this later for Supabase or Firebase.</p>
+    <p class="note">Front-end only example: validates email + password, then stores a fake session in <code>localStorage</code>. Swap this later for Supabase or Firebase.</p>
 
     <!-- Login Modal -->
     <div class="modal" id="loginModal" aria-hidden="true">
@@ -255,10 +257,10 @@
       </div>
     </div>
 
-    <!-- How‑to Modal (step by step) -->
+    <!-- How-to Modal (step by step) -->
     <div class="modal" id="loginHowto" aria-hidden="true">
       <div class="sheet steps" role="dialog" aria-modal="true" aria-labelledby="howtoTitle">
-        <h3 id="howtoTitle">Build this Login (Step‑by‑Step)</h3>
+        <h3 id="howtoTitle">Build this Login (Step-by-Step)</h3>
         <ol>
           <li><strong>Markup</strong>: Add a form with <code>email</code> + <code>password</code> inputs and a submit button (see the demo form above).</li>
           <li><strong>Validate</strong>: In JS, prevent default submit, check email regex & password length, and show inline messages.</li>
@@ -292,14 +294,12 @@
 
   <script>
     // --- Interactive Infographic Data ---
-    // Simple sample scores (0–100). Values are illustrative for interaction demo.
     const COUNTRIES = [
       { name: 'Singapore', data: { GDP: 95, Support: 86, Health: 92, Freedom: 70 } },
       { name: 'Thailand',  data: { GDP: 68, Support: 74, Health: 78, Freedom: 60 } },
       { name: 'Vietnam',   data: { GDP: 62, Support: 71, Health: 76, Freedom: 67 } },
       { name: 'Indonesia', data: { GDP: 65, Support: 69, Health: 72, Freedom: 58 } },
     ];
-
     const METRICS = ['GDP','Support','Health','Freedom'];
 
     const barsEl   = document.getElementById('bars');
@@ -315,57 +315,57 @@
     let highlight = '';
 
     function renderBars(){
-  barsEl.innerHTML = '';
-  const { name, data } = COUNTRIES[idx];
-  labelEl.textContent = name;
-  METRICS.forEach(metric => {
-    const v = data[metric];
+      barsEl.innerHTML = '';
+      const { name, data } = COUNTRIES[idx];
+      labelEl.textContent = name;
+      METRICS.forEach(metric => {
+        const v = data[metric];
 
-    const row = document.createElement('div');
-    row.className = 'barRow';
-    row.setAttribute('data-metric', metric);
+        const row = document.createElement('div');
+        row.className = 'barRow';
+        row.setAttribute('data-metric', metric);
 
-    const lab = document.createElement('span');
-    lab.className = 'barLabel';
-    lab.textContent = metric;
+        const lab = document.createElement('span');
+        lab.className = 'barLabel';
+        lab.textContent = metric;
 
-    const track = document.createElement('div');
-    track.className = 'barTrack';
-    track.style.setProperty('--w', v + '%');
+        const track = document.createElement('div');
+        track.className = 'barTrack';
+        track.style.setProperty('--w', v + '%');
 
-    const fill = document.createElement('div');
-    fill.className = 'barFill';
-    track.appendChild(fill);
+        const fill = document.createElement('div');
+        fill.className = 'barFill';
+        track.appendChild(fill);
 
-    const val = document.createElement('span');
-    val.className = 'barValue';
-    val.textContent = v + '%';
+        const val = document.createElement('span');
+        val.className = 'barValue';
+        val.textContent = v + '%';
 
-    row.appendChild(lab); row.appendChild(track); row.appendChild(val);
-    barsEl.appendChild(row);
+        row.appendChild(lab); row.appendChild(track); row.appendChild(val);
+        barsEl.appendChild(row);
 
-    // Tooltip handlers (mouse + touch)
-    const show = (x,y)=>{ tip.style.display='block'; tip.style.left=x+12+'px'; tip.style.top=y+12+'px'; tip.textContent = `${name} • ${metric}: ${v}%`; tip.setAttribute('aria-hidden','false'); };
-    const hide = ()=>{ tip.style.display='none'; tip.setAttribute('aria-hidden','true'); };
+        // Tooltip handlers (mouse + touch)
+        const show = (x,y)=>{ tip.style.display='block'; tip.style.left=x+12+'px'; tip.style.top=y+12+'px'; tip.textContent = `${name} • ${metric}: ${v}%`; tip.setAttribute('aria-hidden','false'); };
+        const hide = ()=>{ tip.style.display='none'; tip.setAttribute('aria-hidden','true'); };
 
-    track.addEventListener('pointerenter', (e)=> show(e.clientX, e.clientY));
-    track.addEventListener('pointermove',  (e)=> show(e.clientX, e.clientY));
-    track.addEventListener('pointerleave', hide);
-    track.addEventListener('click', ()=> setHighlight(metric));
-    track.setAttribute('tabindex', '0');
-    track.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setHighlight(metric);} });
-  });
+        track.addEventListener('pointerenter', (e)=> show(e.clientX, e.clientY));
+        track.addEventListener('pointermove',  (e)=> show(e.clientX, e.clientY));
+        track.addEventListener('pointerleave', hide);
+        track.addEventListener('click', ()=> setHighlight(metric));
+        track.setAttribute('tabindex', '0');
+        track.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setHighlight(metric);} });
+      });
 
-  // Update legend active state
-  [...legendEl.querySelectorAll('.tag')].forEach(tag=>{
-    tag.classList.toggle('active', tag.dataset.metric === highlight);
-  });
+      // Update legend active state
+      [...legendEl.querySelectorAll('.tag')].forEach(tag=>{
+        tag.classList.toggle('active', tag.dataset.metric === highlight);
+      });
 
-  // Emphasize highlighted metric visually
-  [...barsEl.children].forEach(row=>{
-    row.style.opacity = (!highlight || row.dataset.metric===highlight) ? 1 : .35;
-  });
-}
+      // Emphasize highlighted metric visually
+      [...barsEl.children].forEach(row=>{
+        row.style.opacity = (!highlight || row.dataset.metric===highlight) ? 1 : .35;
+      });
+    }
 
     function setHighlight(m){
       highlight = (highlight===m) ? '' : m; // toggle
@@ -403,7 +403,7 @@
     modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
 
-    // --- How‑to modal controls ---
+    // --- How-to modal controls ---
     const howtoLink = document.getElementById('openLoginHowto');
     const howtoModal= document.getElementById('loginHowto');
     const howtoClose= document.getElementById('closeLoginHowto');
@@ -415,7 +415,7 @@
     howtoClose.addEventListener('click', closeHowto);
     howtoModal.addEventListener('click', (e)=>{ if(e.target === howtoModal) closeHowto(); });
 
-    // --- Fake login (front‑end only) ---
+    // --- Fake login (front-end only) ---
     const form = document.getElementById('loginForm');
     const note = document.getElementById('loginNote');
 
