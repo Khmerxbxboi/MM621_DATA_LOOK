@@ -237,7 +237,7 @@
     <div>© <span id="year"></span> Bullimalinna Sot · Interaction Design & Interactive Art MM621 — “Designing happiness, not just pixels.”</div>
     <div class="footer-links">
       <a href="https://worldhappiness.report/ed/2019/" target="_blank">🌏 2019 Data Source</a> ·
-      <a href="https://github.com/khmerxbxboi/MM621_Project-2-Data-Visualization" target="_blank">GitHub Repo</a> ·
+      <a href="https://khmerxbxboi.github.io/MM621_DATA_LOOK" target="_blank">GitHub Repo</a> ·
       <a href="inspiration.html">💡 Inspiration</a>
     </div>
   </footer>
@@ -248,7 +248,7 @@
   </button>
 
 <script>
-  // ---------- true 100vh on mobile (keyboard safe) ----------
+
   function setVh() {
     const vv = window.visualViewport;
     const h = vv ? vv.height : window.innerHeight;
@@ -319,7 +319,7 @@
     rememberBtn.style.color = pressed ? "var(--fg-1)" : "var(--brand)";
   });
 
-  // Keep p5 from stealing input while typing in the gate
+
   ['keydown','keyup','keypress','input','touchstart','pointerdown','click'].forEach(evt=>{
     document.getElementById('gateForm').addEventListener(evt, e => e.stopPropagation(), true);
   });
@@ -341,7 +341,7 @@
 
   input.addEventListener("keydown", (e)=>{ if (e.key === "Enter") e.target.form.requestSubmit(); });
 
-  // ---------- Voice login (SpeechRecognition) ----------
+
   (function setupVoice(){
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
