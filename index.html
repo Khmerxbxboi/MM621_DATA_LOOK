@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SEA Happiness Data · Sodaro Visualization</title>
+
+  <!-- p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js" defer></script>
+  <script src="sketch.js" defer></script>
+
+  <meta name="theme-color" content="#0CAFFF" />
+  <meta property="og:title" content="Sodaro · SEA Happiness Visualization" />
+  <meta property="og:description" content="Electric-blue interactive data visualization built in p5.js by Bullimalinna Sot." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg-0:#0b0f14; --bg-1:#12161d; --fg-1:#e7eef8; --fg-2:#9fb0c8;
+      --brand:#0CAFFF; --muted:#1f2630; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --vh: 100vh; /* replaced by visualViewport height */
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--fg-1);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, #122033 0%, transparent 60%),
+        radial-gradient(900px 500px at 120% 20%, #101a2a 0%, transparent 55%),
+        var(--bg-0);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      display:flex; flex-direction:column; gap:16px;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      min-height: var(--vh);
+    }
+
+    header{
+      position:relative; z-index:1;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:calc(12px + var(--safe-top)) clamp(12px,4vw,28px) 12px;
+      transition: opacity .25s ease;
+    }
+    .brand{display:flex; flex-direction:column; text-decoration:none; color:var(--fg-1);}
+    .title{font-weight:800; font-size:clamp(18px,2.3vw,22px);}
+    .subtitle{color:var(--fg-2); font-size:clamp(12px,1.6vw,14px);}
+    .back-link{color:var(--fg-2); text-decoration:none; padding:10px 14px; border:1px solid var(--muted); border-radius:10px;}
+    .back-link:hover{color:var(--fg-1); border-color:#2b3542;}
+
+    .stage{
+      position:relative;
+      padding: clamp(8px,2vw,16px);
+      margin: 0 clamp(8px,3vw,28px);
+      border-radius:var(--radius);
+      background:rgba(18,22,29,.55);
+      backdrop-filter:blur(6px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      opacity:0; transform:translateY(10px);
+      transition:opacity .35s ease,transform .35s ease, box-shadow .25s ease;
+      padding-bottom: calc(clamp(8px,2vw,16px) + var(--safe-bottom));
+      min-height: 60vh;
+    }
+    .stage.ready{opacity:1;transform:translateY(0)}
+    canvas{display:block;margin:0 auto;max-width:100%;height:auto;touch-action:manipulation}
+
+    footer{
+      margin:0 clamp(8px,3vw,28px) calc(10px + var(--safe-bottom));
+      background:var(--bg-1); border:1px solid var(--muted); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:14px clamp(14px,3vw,22px);
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      font-size:14px; color:var(--fg-2);
+      transition: transform .28s ease, opacity .2s ease;
+    }
+    footer a{color:var(--fg-1); text-decoration:none}
+    footer a:hover{color:var(--brand)}
+
+    /* Splash */
+    .splash{position:fixed; inset:0; z-index:1000; display:grid; place-items:center;
+      background:radial-gradient(1600px 800px at 50% -10%, #10151d 0%, transparent 65%), #04070b;
+      animation:splashFadeOut .4s ease forwards; animation-delay:1.2s;}
+    .hidden{display:none!important}
+    .splash .logo-big{width:min(240px,42vmin); height:min(240px,42vmin); object-fit:contain; border-radius:24px;
+      animation:bootSpin 1.0s ease-out, bootSettle .8s cubic-bezier(.2,.9,.2,1) .8s forwards;}
+    @keyframes bootSpin{0%{transform:scale(.7) rotate(-8deg);opacity:0}50%{opacity:1}100%{transform:scale(1)}}
+    @keyframes bootSettle{from{transform:scale(1)}to{transform:.96}}
+    @keyframes splashFadeOut{to{opacity:0;pointer-events:none}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+    /* Sign-in gate */
+    .gate{position:fixed; inset:0; z-index:900; display:grid; place-items:center;
+      background:
+        radial-gradient(1100px 600px at 15% -10%,rgba(40,80,110,.35) 0%,transparent 60%),
+        radial-gradient(900px 500px at 120% 20%,rgba(40,80,110,.25) 0%,transparent 55%),
+        rgba(7,10,14,.92);
+      opacity:0; pointer-events:none; transition:opacity .25s ease;
+      padding: calc(12px + var(--safe-top)) 12px calc(12px + var(--safe-bottom));
+    }
+    .card{width:min(560px,92vw); background:rgba(18,22,29,.88);
+      border:1px solid var(--muted); border-radius:16px; box-shadow:var(--shadow);
+      padding:clamp(18px,3vw,26px); text-align:center;}
+    .auth-logo{width:72px;height:72px;margin:4px auto 14px auto; object-fit:contain; border-radius:18px; opacity:0; transition:opacity .35s}
+    .product{display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:8px}
+    .gem{width:10px;height:10px;border-radius:999px;background:var(--brand)}
+    .name{font-weight:800; font-size:clamp(16px,2vw,20px)}
+    .tagline{color:var(--fg-2); font-size:clamp(12px,1.5vw,14px)}
+    .form{display:grid; gap:12px; margin-top:12px}
+    label{color:var(--fg-2); font-size:13px; text-align:left}
+    .fieldline{display:flex; gap:8px; align-items:center}
+    input[type=text]{flex:1; padding:12px; border-radius:10px; background:#0f141b; color:var(--fg-1);
+      border:1px solid var(--muted); outline:none; font-size:16px;}
+    input[type=text]:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(12,175,255,.15)}
+    .mic-btn{flex:0 0 auto; width:46px; height:46px; border-radius:10px; border:1px solid #2b3542; background:#0e151d; color:var(--fg-1); display:grid; place-items:center; cursor:pointer}
+    .mic-btn.active{border-color:var(--brand); box-shadow:0 0 0 3px rgba(12,175,255,.15); color:var(--brand)}
+    .actions{display:flex; justify-content:center; gap:10px; flex-wrap:wrap}
+    .btn{cursor:pointer; padding:10px 14px; border-radius:10px; border:1px solid #2b3542; background:rgba(255,255,255,.02); color:var(--fg-1); font-weight:700; font-size:14px}
+    .btn:hover{border-color:var(--brand); color:var(--brand)}
+    .error{color:#ff7a7a; font-size:13px; min-height:18px}
+
+    /* --- Mobile-only footer toggle & chrome dim + tighter header --- */
+    @media(max-width:720px){
+      .subtitle{display:none}
+
+      /* tighter vertical rhythm */
+      body{ gap:8px; }
+
+      /* slimmer header */
+      header{
+        padding: calc(6px + var(--safe-top)) 10px 6px;
+      }
+      .title{ font-size: clamp(14px, 4.2vw, 18px); }
+
+      /* compact back link */
+      .back-link{
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 8px;
+      }
+
+      /* pull the stage closer for a taller canvas view */
+      .stage{ padding:10px; margin: 0 10px; }
+
+      footer{font-size:13px; gap:8px}
+
+      /* footer behaves like a slide-up sheet on mobile */
+      footer{
+        position: fixed;
+        left: 12px; right: 12px;
+        bottom: 12px;
+        z-index: 940;
+        transform: translateY(110%);
+        opacity: 0;
+        pointer-events: none;
+      }
+      footer.show{
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* floating toggle button */
+      .footer-toggle{
+        position: fixed;
+        right: 14px;
+        bottom: calc(14px + var(--safe-bottom));
+        z-index: 950;
+        padding: 10px 12px;
+        font-weight: 800;
+        font-size: 13px;
+        border-radius: 12px;
+        border: 1px solid #2b3542;
+        background: rgba(255,255,255,.04);
+        color: var(--fg-1);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(6px);
+      }
+      .footer-toggle[aria-expanded="true"]{
+        color: var(--brand);
+        border-color: var(--brand);
+      }
+
+      /* dim chrome when footer hidden */
+      body.chrome-dim header{ opacity:.6; }
+      body.chrome-dim .stage{ box-shadow: 0 16px 50px rgba(0,0,0,.55); }
+    }
+
+    /* hide back link on very small phones for extra space */
+    @media(max-width:480px){
+      .back-link{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="#">
+      <div class="title">Harmony & Data · SEA Happiness Study 2019</div>
+      <div class="subtitle">Interaction Design Data Visualization</div>
+    </a>
+    <a class="back-link" href="https://www.jayaproduction.com">← Back</a>
+  </header>
+
+  <!-- Splash -->
+  <section class="splash" id="splash">
+    <img src="sodaro_logo.png" alt="Sodaro Logo" class="logo-big" />
+  </section>
+
+  <!-- Sign-in -->
+  <section class="gate" id="gate" aria-modal="true" role="dialog">
+    <div class="card">
+      <img src="sodaro_logo.png" alt="Sodaro Logo" class="auth-logo" id="authLogo" />
+      <div class="product"><span class="gem"></span><div id="gateTitle" class="name">Sign in to continue</div></div>
+      <div class="tagline">Access restricted: SEA Happiness Data · 2019 — encrypted visualization</div>
+
+      <form class="form" id="gateForm" novalidate>
+        <label for="passphrase">SEA Access Key</label>
+        <div class="fieldline">
+          <input id="passphrase" type="text" placeholder='Type or say: "Southeast Asia"'
+                 autocomplete="one-time-code" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="text" enterkeyhint="go" />
+          <button class="mic-btn" id="micBtn" type="button" aria-pressed="false" aria-label="Speak passphrase">🎤</button>
+        </div>
+        <div id="error" class="error" aria-live="polite"></div>
+        <div class="actions">
+          <button class="btn" id="enterBtn" type="submit">Enter</button>
+          <button class="btn" id="rememberBtn" type="button" aria-pressed="false">Remember device</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <main class="stage" id="stage" aria-label="Visualization">
+    <div id="app"></div>
+  </main>
+
+  <footer id="pageFooter" aria-hidden="true">
+    <div>© <span id="year"></span> Bullimalinna Sot · Interaction Design & Interactive Art MM621 — “Designing happiness, not just pixels.”</div>
+    <div class="footer-links">
+      <a href="https://worldhappiness.report/ed/2019/" target="_blank">🌏 2019 Data Source</a> ·
+      <a href="https://github.com/khmerxbxboi/MM621_Project-2-Data-Visualization" target="_blank">GitHub Repo</a> ·
+      <a href="inspiration.html">💡 Inspiration</a>
+    </div>
+  </footer>
+
+  <!-- Mobile-only footer toggle button -->
+  <button class="footer-toggle" id="footerToggle" aria-expanded="false" aria-controls="pageFooter" hidden>
+    ☰ Info
+  </button>
+
+<script>
+  // ---------- true 100vh on mobile (keyboard safe) ----------
+  function setVh() {
+    const vv = window.visualViewport;
+    const h = vv ? vv.height : window.innerHeight;
+    document.documentElement.style.setProperty('--vh', h + 'px');
+  }
+  setVh();
+  window.addEventListener('resize', setVh);
+  if (window.visualViewport) visualViewport.addEventListener('resize', setVh);
+
+  // Footer year
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // ---------- Attach canvas to #app after load ----------
+  window.addEventListener("load", () => {
+    const app = document.getElementById("app");
+    const canv = document.querySelector("canvas");
+    if (app && canv && !app.contains(canv)) app.appendChild(canv);
+
+    // Only prevent scrolling when the finger is on the canvas
+    if (canv) {
+      canv.addEventListener('touchmove', (e) => e.preventDefault(), { passive:false });
+    }
+  });
+
+  // ---------- Boot / Login logic ----------
+  const PASS = "southeast asia";
+  const STORAGE_KEY = "sea_demo_access_v5";
+  const url = new URL(window.location.href);
+  const forceBoot = url.searchParams.get("boot") === "1";
+  const doReset   = url.searchParams.get("reset") === "1";
+  if (doReset) { try { localStorage.removeItem(STORAGE_KEY); } catch(_) {} }
+
+  const splash = document.getElementById("splash");
+  const gate   = document.getElementById("gate");
+  const logo   = document.getElementById("authLogo");
+  const stageEl= document.getElementById("stage");
+  const input  = document.getElementById("passphrase");
+  const error  = document.getElementById("error");
+  const rememberBtn = document.getElementById("rememberBtn");
+  const micBtn = document.getElementById("micBtn");
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const remembered = !forceBoot && (localStorage.getItem(STORAGE_KEY) === "1");
+
+  function reallyHide(el){ el.classList.add("hidden"); el.style.opacity="0"; el.style.pointerEvents="none"; }
+  function showGate(){
+    gate.classList.remove("hidden");
+    gate.style.opacity = "1";
+    gate.style.pointerEvents = "auto";
+    setTimeout(()=> { logo.style.opacity = "1"; }, 80);
+    // Focus safely above keyboard
+    setTimeout(()=> {
+      input?.focus({ preventScroll:false });
+      input?.scrollIntoView({ block:"center", behavior:"smooth" });
+    }, 140);
+  }
+
+  if (remembered) {
+    reallyHide(splash); reallyHide(gate); stageEl.classList.add("ready");
+  } else {
+    if (prefersReduced) { splash.style.animation="none"; setTimeout(()=>{ reallyHide(splash); showGate(); }, 200); }
+    else { setTimeout(()=>{ reallyHide(splash); showGate(); }, 1000); }
+  }
+
+  rememberBtn.addEventListener("click", ()=>{
+    const pressed = rememberBtn.getAttribute("aria-pressed") === "true";
+    rememberBtn.setAttribute("aria-pressed", (!pressed).toString());
+    rememberBtn.style.borderColor = pressed ? "#2b3542" : "var(--brand)";
+    rememberBtn.style.color = pressed ? "var(--fg-1)" : "var(--brand)";
+  });
+
+  // Keep p5 from stealing input while typing in the gate
+  ['keydown','keyup','keypress','input','touchstart','pointerdown','click'].forEach(evt=>{
+    document.getElementById('gateForm').addEventListener(evt, e => e.stopPropagation(), true);
+  });
+
+  function normalize(str){ return (str||'').trim().toLowerCase().replace(/\s+/g,' '); }
+  function unlock(){
+    reallyHide(gate); reallyHide(splash); stageEl.classList.add("ready");
+    if (rememberBtn.getAttribute("aria-pressed") === "true") {
+      try { localStorage.setItem(STORAGE_KEY, "1"); } catch(_) {}
+    }
+  }
+
+  document.getElementById("gateForm").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const ok = normalize(input.value) === PASS;
+    if (!ok) { error.textContent = 'Incorrect key. Hint: "Southeast Asia"'; input.select(); return; }
+    error.textContent = ""; unlock();
+  });
+
+  input.addEventListener("keydown", (e)=>{ if (e.key === "Enter") e.target.form.requestSubmit(); });
+
+  // ---------- Voice login (SpeechRecognition) ----------
+  (function setupVoice(){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      micBtn.disabled = true;
+      micBtn.title = "Voice login not supported in this browser";
+      return;
+    }
+    const rec = new SR();
+    rec.lang = 'en-US';
+    rec.interimResults = false;
+    rec.maxAlternatives = 3;
+
+    let active = false;
+    function setMic(on){
+      active = on;
+      micBtn.classList.toggle('active', on);
+      micBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+
+    rec.onresult = (ev)=>{
+      const said = Array.from(ev.results[0] || [])
+        .map(a => a.transcript).join(' ').toLowerCase();
+      input.value = said;
+      if (normalize(said) === PASS) {
+        error.textContent = "";
+        unlock();
+      } else {
+        error.textContent = `Heard: "${said}". Say "Southeast Asia".`;
+        input.focus();
+      }
+    };
+    rec.onerror = (e)=>{ error.textContent = e.error === 'not-allowed' ? 'Mic permission denied.' : ('Voice error: ' + e.error); setMic(false); };
+    rec.onend = ()=> setMic(false);
+
+    micBtn.addEventListener('click', async ()=>{
+      if (active) { try { rec.stop(); } catch(_) {} return; }
+      error.textContent = "Listening… say: Southeast Asia";
+      setMic(true);
+      try { rec.start(); } catch(_) { setMic(false); }
+    });
+  })();
+
+  // ---------- Mobile-only footer toggle & chrome dim ----------
+  (function setupFooterToggle(){
+    const isMobile = window.matchMedia('(max-width: 720px)').matches;
+    const footer = document.getElementById('pageFooter');
+    const toggle = document.getElementById('footerToggle');
+
+    if (!isMobile || !footer || !toggle) return;
+
+    // Show the toggle button on mobile
+    toggle.hidden = false;
+
+    // Start with footer hidden and chrome dimmed
+    document.body.classList.add('chrome-dim');
+    footer.classList.remove('show');
+    footer.setAttribute('aria-hidden','true');
+    toggle.setAttribute('aria-expanded','false');
+
+    function openFooter(){
+      footer.classList.add('show');
+      footer.setAttribute('aria-hidden','false');
+      toggle.setAttribute('aria-expanded','true');
+      document.body.classList.remove('chrome-dim');
+    }
+    function closeFooter(){
+      footer.classList.remove('show');
+      footer.setAttribute('aria-hidden','true');
+      toggle.setAttribute('aria-expanded','false');
+      document.body.classList.add('chrome-dim');
+    }
+
+    toggle.addEventListener('click', ()=>{
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      expanded ? closeFooter() : openFooter();
+    });
+
+    // Close footer if user taps outside of it (but not the toggle)
+    document.addEventListener('click', (e)=>{
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      if (!expanded) return;
+      const withinFooter = footer.contains(e.target);
+      const isToggle = toggle.contains(e.target);
+      if (!withinFooter && !isToggle) closeFooter();
+    }, { passive:true });
+
+    // Keep footer open above the keyboard; optional adjustments could go here
+    if (window.visualViewport){
+      visualViewport.addEventListener('resize', ()=>{ /* no-op */ });
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inspiration · SEA Happiness Visualization 2025</title>
+  <meta name="theme-color" content="#0CAFFF" />
+
+  <style>
+    :root{
+      --bg:#0a0e14; --bg2:#0f1420; --ink:#e9eef7; --muted:#a6b4c9;
+      --brand:#0CAFFF; --brand2:#7ad8ff;
+      --line:#1a2738; --shadow:0 14px 40px rgba(0,0,0,.45); --radius:16px;
+      --ok:#1bd96a; --warn:#ffd166;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:radial-gradient(1200px 600px at 15% -10%, #0e1a2a 0%, transparent 60%), #0a0e14;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:inherit;text-decoration:none}
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:5;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px clamp(12px,4vw,24px);
+      background:linear-gradient(180deg, rgba(8,12,18,.92), rgba(8,12,18,.78));
+      border-bottom:1px solid #171f2a; backdrop-filter:blur(10px);
+    }
+    header .title{font-weight:800; letter-spacing:.2px}
+    header .back{color:var(--muted); border:1px solid var(--line); padding:8px 12px; border-radius:12px}
+    header .back:hover{color:var(--ink); border-color:#2b3a50}
+
+    /* Main */
+    main{max-width:1000px; margin:22px auto 0; padding:0 clamp(12px,4vw,24px)}
+    h1{font-size:clamp(18px,4.5vw,26px); margin:0 0 4px}
+    .sub{color:var(--muted); font-size:14px; margin:0 0 18px}
+
+    /* Link grid (mobile-first) */
+    .grid{display:grid; gap:12px; grid-template-columns:1fr}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
+      padding:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .card .meta{display:flex; flex-direction:column; gap:3px}
+    .card .name{font-weight:700}
+    .card .desc{color:var(--muted); font-size:13px}
+    .pill{display:inline-flex; align-items:center; gap:6px; background:rgba(12,175,255,.12); color:var(--brand2); border:1px solid #1e2e40; padding:8px 10px; border-radius:999px; font-weight:700; font-size:13px; transition:.18s ease}
+    .pill::after{content:"↗"}
+    .card:active .pill, .card:hover .pill{background:rgba(12,175,255,.2); border-color:var(--brand)}
+
+    .section-title{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:22px}
+    .section-title h2{font-size:16px; margin:0; color:var(--brand)}
+
+    .infoblock{margin:18px 0 10px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:14px}
+
+    /* Interactive Bars */
+    .viz-controls{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px}
+    .viz-controls select, .viz-controls input[type="range"], .viz-controls button{
+      background:#0c121b; border:1px solid #142233; color:var(--ink); border-radius:10px; padding:8px 10px; outline:none
+    }
+    .viz-controls button{cursor:pointer}
+    .range-wrap{display:flex; align-items:center; gap:8px}
+    .country-label{font-weight:800}
+
+    .bars{display:grid; gap:14px; margin-top:6px}
+    .barRow{display:flex; align-items:center; gap:14px}
+.barLabel{min-width:110px; font-weight:700; letter-spacing:.2px; color:var(--ink)}
+@media (max-width:520px){ .barLabel{min-width:86px; font-size:12px} }
+.barTrack{position:relative; flex:1; height:18px; border-radius:999px; background:#0c121b; border:1px solid #142233; overflow:hidden}
+.barFill{position:absolute; inset:0 auto 0 0; width:var(--w,0%); background:linear-gradient(90deg, rgba(12,175,255,.18), rgba(12,175,255,.98)); box-shadow:inset 0 0 16px rgba(12,175,255,.45); transition:width .35s ease}
+.barTrack:hover .barFill{filter:saturate(1.1)}
+.barValue{margin-left:8px; font-size:12px; font-weight:800; color:var(--ink); padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid #1e2e40}
+    /* removed old inner span rule (now .barFill) */
+    /* replaced by .barTrack:hover .barFill */
+    /* label now sits outside track as .barLabel */
+    /* value now shown as .barValue */
+
+    .labels{display:flex; justify-content:space-between; color:var(--muted); font-size:12px; margin-top:6px}
+    .legend{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .legend .tag{border:1px solid #1e2e40; color:var(--muted); padding:6px 8px; border-radius:999px; font-size:12px; cursor:pointer}
+    .legend .tag.active{background:rgba(12,175,255,.15); color:var(--ink); border-color:var(--brand)}
+
+    /* Tooltip */
+    .tip{position:fixed; pointer-events:none; background:#0e141d; border:1px solid #1e2e40; padding:6px 8px; font-size:12px; border-radius:8px; box-shadow:var(--shadow); display:none}
+
+    /* Footer */
+    footer{margin:20px clamp(12px,4vw,24px); padding:12px; background:linear-gradient(180deg, #0e141d, #0d131c); border:1px solid #151e2a; border-radius:var(--radius); box-shadow:var(--shadow); display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:14px}
+    footer .links{display:flex; gap:10px; flex-wrap:wrap}
+    .hi{color:#00121f; background:var(--brand); padding:6px 10px; border-radius:8px; font-weight:800}
+    .hi:hover{background:#33c3ff}
+
+    /* Responsive */
+    @media (min-width:640px){ .grid{grid-template-columns:1fr 1fr} }
+    @media (min-width:960px){ .grid{grid-template-columns:1fr 1fr 1fr} }
+
+    /* Simple modal */
+    .modal{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:16px}
+    .modal.open{display:flex}
+    .sheet{width:min(620px,100%); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:18px}
+    .sheet h3{margin:0 0 8px}
+    .row{display:flex; flex-direction:column; gap:6px; margin:8px 0}
+    .row label{font-size:13px; color:var(--muted)}
+    .row input{background:#0c121b; border:1px solid #142233; color:var(--ink); border-radius:10px; padding:10px 12px; outline:none}
+    .row input:focus{border-color:#2b3a50}
+    .actions{display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap; margin-top:10px}
+    .btn{border:1px solid #1e2e40; background:#0e141d; color:var(--ink); padding:10px 12px; border-radius:10px; cursor:pointer}
+    .btn.primary{background:var(--brand); color:#00121f; font-weight:800}
+    .note{font-size:12px; color:var(--muted)}
+    .steps ol{margin:0; padding-left:18px}
+    .steps li{margin:8px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Inspiration</div>
+  <a class="back" href="https://khmerxbxboi.github.io/MM621_Project-2-Data-Visualization/">← Back to Visualization</a>
+
+  </header>
+
+  <main>
+    <!-- Spelling fixed per request -->
+    <h1>Design & Data Visualization Inspiration</h1>
+    <p class="sub">References that blend storytelling, interaction, and clean data design.</p>
+
+    <!-- Core inspiration (links) -->
+    <section class="grid" aria-label="Inspiration links">
+      <a class="card" href="https://observablehq.com/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Observable HQ</span><span class="desc">Notebook-driven data exploration</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://ourworldindata.org/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Our World in Data</span><span class="desc">Happiness research & indicators</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://datavizproject.com/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Data Viz Project</span><span class="desc">Chart types & use cases</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://pudding.cool/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">The Pudding</span><span class="desc">Data-driven stories</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://informationisbeautiful.net/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Information Is Beautiful</span><span class="desc">Visual explainers & ideas</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://threejs.org/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Three.js</span><span class="desc">WebGL 3D for the web</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://figr.design/blog/dashboard-design-best-practices" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Dashboard Best Practices</span><span class="desc">Figr · layout & clarity tips</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://www.youtube.com/watch?v=B7k5rOgmOGY" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">YouTube: D3 (video)</span><span class="desc">Hands‑on data viz walkthrough</span></div>
+        <span class="pill">Open</span>
+      </a>
+    </section>
+
+    <!-- Interactive infographic sample -->
+    <section class="infoblock" aria-label="Interactive infographic">
+      <div class="section-title">
+        <h2>Interactive Preview · SEA 2019 (Sample)</h2>
+        <div class="viz-controls">
+          <span class="country-label" id="countryLabel">Singapore</span>
+          <div class="range-wrap">
+            <button class="btn" id="prevCountry" aria-label="Previous country">◀</button>
+            <input id="countryRange" type="range" min="0" max="3" step="1" value="0" aria-label="Choose country" />
+            <button class="btn" id="nextCountry" aria-label="Next country">▶</button>
+          </div>
+          <select id="metricSelect" aria-label="Highlight a metric">
+            <option value="">Highlight: none</option>
+            <option value="GDP">GDP</option>
+            <option value="Support">Support</option>
+            <option value="Health">Health</option>
+            <option value="Freedom">Freedom</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bars" id="bars" role="group" aria-label="Happiness factors">
+        <!-- Bars are injected by JS -->
+      </div>
+      <div class="labels"><span>Higher well‑being</span><span>Lower</span></div>
+      <div class="legend" id="legend" aria-label="Toggle metric highlight">
+        <span class="tag" data-metric="GDP">GDP</span>
+        <span class="tag" data-metric="Support">Support</span>
+        <span class="tag" data-metric="Health">Health</span>
+        <span class="tag" data-metric="Freedom">Freedom</span>
+      </div>
+      <p class="note">Tip: drag the slider or tap ◀ ▶ to switch countries. Tap a legend chip to highlight a metric. Long‑press / hover a bar for a tooltip. Mobile‑friendly, no libraries.</p>
+      <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+    </section>
+
+    <!-- Build the data (fetch + viz libs) -->
+    <div class="section-title"><h2>Build the Data</h2></div>
+    <section class="grid" aria-label="Build the data links">
+      <a class="card" href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">MDN · Fetch()</span><span class="desc">Load JSON from files/APIs</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://d3js.org/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">D3.js</span><span class="desc">Low‑level, powerful data‑viz</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Vega‑Lite</span><span class="desc">Declarative charts fast</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://developers.google.com/sheets/api/quickstart/js" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Google Sheets API</span><span class="desc">Treat a sheet like a dataset</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://supabase.com/docs/guides/auth" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Supabase Auth</span><span class="desc">Email magic links & DB</span></div>
+        <span class="pill">Open</span>
+      </a>
+      <a class="card" href="https://firebase.google.com/docs/auth/web/start" target="_blank" rel="noopener">
+        <div class="meta"><span class="name">Firebase Auth</span><span class="desc">Google’s web auth starter</span></div>
+        <span class="pill">Open</span>
+      </a>
+    </section>
+
+    <!-- Auth — Simple Login (Vanilla JS) -->
+    <div class="section-title">
+      <h2>Auth — Simple Login (Vanilla JS)</h2>
+      <div class="actions">
+        <button id="openLogin" class="btn">Open Demo</button>
+        <!-- Request: link to step‑by‑step guide -->
+        <a id="openLoginHowto" class="btn" href="#login-howto">Step‑by‑step: Build this login</a>
+      </div>
+    </div>
+    <p class="note">Front‑end only example: validates email + password, then stores a fake session in <code>localStorage</code>. Swap this later for Supabase or Firebase.</p>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal" aria-hidden="true">
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+        <h3 id="loginTitle">Log in</h3>
+        <form id="loginForm">
+          <div class="row">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="row">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" minlength="6" required />
+          </div>
+          <div class="actions">
+            <button type="button" class="btn" id="closeLogin">Cancel</button>
+            <button type="submit" class="btn primary">Continue</button>
+          </div>
+          <p class="note" id="loginNote"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- How‑to Modal (step by step) -->
+    <div class="modal" id="loginHowto" aria-hidden="true">
+      <div class="sheet steps" role="dialog" aria-modal="true" aria-labelledby="howtoTitle">
+        <h3 id="howtoTitle">Build this Login (Step‑by‑Step)</h3>
+        <ol>
+          <li><strong>Markup</strong>: Add a form with <code>email</code> + <code>password</code> inputs and a submit button (see the demo form above).</li>
+          <li><strong>Validate</strong>: In JS, prevent default submit, check email regex & password length, and show inline messages.</li>
+          <li><strong>Session (demo)</strong>: If valid, create a small object like <code>{ user:{email}, token, ts }</code> and store it in <code>localStorage</code> as <code>demo_session</code>.</li>
+          <li><strong>Replace with real auth</strong> (pick one):
+            <ul>
+              <li><a target="_blank" rel="noopener" href="https://supabase.com/docs/guides/auth">Supabase Auth</a>: enable Email or Magic Links in the dashboard, then use <code>@supabase/supabase-js</code> to <code>signInWithOtp</code> or <code>signInWithPassword</code>.</li>
+              <li><a target="_blank" rel="noopener" href="https://firebase.google.com/docs/auth/web/start">Firebase Auth</a>: initialize the SDK, choose providers (Email/Google), then call <code>signInWithEmailAndPassword</code> or <code>sendSignInLinkToEmail</code>.</li>
+            </ul>
+          </li>
+          <li><strong>Protect pages</strong>: On load, read your session (or Supabase/Firebase user). If missing, redirect to <em>/login</em>; if present, show the app. Always enforce rules on your server too.</li>
+          <li><strong>Log out</strong>: Clear session storage (or call the provider’s <code>signOut()</code>), then navigate to home.</li>
+        </ol>
+        <div class="actions">
+          <button type="button" class="btn" id="closeLoginHowto">Close</button>
+          <a class="btn primary" href="https://developer.mozilla.org/en-US/docs/Learn/Forms" target="_blank" rel="noopener">MDN: Web Forms</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div>© 2025 Bulli Sot</div>
+    <div class="links">
+      <a class="hi" href="https://worldhappiness.report/ed/2019/" target="_blank" rel="noopener">🌏 2019 Data Source</a>
+      <a href="https://github.com/khmerxbxboi/MM621_Project-2-Data-Visualization" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="https://www.jayaproduction.com" target="_blank" rel="noopener">jayaproduction.com</a>
+    </div>
+  </footer>
+
+  <script>
+    // --- Interactive Infographic Data ---
+    // Simple sample scores (0–100). Values are illustrative for interaction demo.
+    const COUNTRIES = [
+      { name: 'Singapore', data: { GDP: 95, Support: 86, Health: 92, Freedom: 70 } },
+      { name: 'Thailand',  data: { GDP: 68, Support: 74, Health: 78, Freedom: 60 } },
+      { name: 'Vietnam',   data: { GDP: 62, Support: 71, Health: 76, Freedom: 67 } },
+      { name: 'Indonesia', data: { GDP: 65, Support: 69, Health: 72, Freedom: 58 } },
+    ];
+
+    const METRICS = ['GDP','Support','Health','Freedom'];
+
+    const barsEl   = document.getElementById('bars');
+    const legendEl = document.getElementById('legend');
+    const rangeEl  = document.getElementById('countryRange');
+    const nextBtn  = document.getElementById('nextCountry');
+    const prevBtn  = document.getElementById('prevCountry');
+    const labelEl  = document.getElementById('countryLabel');
+    const metricSel= document.getElementById('metricSelect');
+    const tip      = document.getElementById('tip');
+
+    let idx = 0; // current country index
+    let highlight = '';
+
+    function renderBars(){
+  barsEl.innerHTML = '';
+  const { name, data } = COUNTRIES[idx];
+  labelEl.textContent = name;
+  METRICS.forEach(metric => {
+    const v = data[metric];
+
+    const row = document.createElement('div');
+    row.className = 'barRow';
+    row.setAttribute('data-metric', metric);
+
+    const lab = document.createElement('span');
+    lab.className = 'barLabel';
+    lab.textContent = metric;
+
+    const track = document.createElement('div');
+    track.className = 'barTrack';
+    track.style.setProperty('--w', v + '%');
+
+    const fill = document.createElement('div');
+    fill.className = 'barFill';
+    track.appendChild(fill);
+
+    const val = document.createElement('span');
+    val.className = 'barValue';
+    val.textContent = v + '%';
+
+    row.appendChild(lab); row.appendChild(track); row.appendChild(val);
+    barsEl.appendChild(row);
+
+    // Tooltip handlers (mouse + touch)
+    const show = (x,y)=>{ tip.style.display='block'; tip.style.left=x+12+'px'; tip.style.top=y+12+'px'; tip.textContent = `${name} • ${metric}: ${v}%`; tip.setAttribute('aria-hidden','false'); };
+    const hide = ()=>{ tip.style.display='none'; tip.setAttribute('aria-hidden','true'); };
+
+    track.addEventListener('pointerenter', (e)=> show(e.clientX, e.clientY));
+    track.addEventListener('pointermove',  (e)=> show(e.clientX, e.clientY));
+    track.addEventListener('pointerleave', hide);
+    track.addEventListener('click', ()=> setHighlight(metric));
+    track.setAttribute('tabindex', '0');
+    track.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setHighlight(metric);} });
+  });
+
+  // Update legend active state
+  [...legendEl.querySelectorAll('.tag')].forEach(tag=>{
+    tag.classList.toggle('active', tag.dataset.metric === highlight);
+  });
+
+  // Emphasize highlighted metric visually
+  [...barsEl.children].forEach(row=>{
+    row.style.opacity = (!highlight || row.dataset.metric===highlight) ? 1 : .35;
+  });
+}
+
+    function setHighlight(m){
+      highlight = (highlight===m) ? '' : m; // toggle
+      metricSel.value = highlight;
+      renderBars();
+    }
+
+    // Legend click to toggle highlight
+    legendEl.addEventListener('click', (e)=>{
+      const tag = e.target.closest('.tag'); if(!tag) return; setHighlight(tag.dataset.metric);
+    });
+
+    // Dropdown sync
+    metricSel.addEventListener('change', ()=> setHighlight(metricSel.value));
+
+    // Country navigation
+    function setCountry(newIdx){ idx = (newIdx+COUNTRIES.length)%COUNTRIES.length; rangeEl.value = idx; renderBars(); }
+    nextBtn.addEventListener('click', ()=> setCountry(idx+1));
+    prevBtn.addEventListener('click', ()=> setCountry(idx-1));
+    rangeEl.addEventListener('input', ()=> setCountry(+rangeEl.value));
+
+    // Init
+    renderBars();
+
+    // --- Simple modal controls (Login) ---
+    const openBtn = document.getElementById('openLogin');
+    const closeBtn = document.getElementById('closeLogin');
+    const modal = document.getElementById('loginModal');
+
+    function openModal(){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
+    function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+    // --- How‑to modal controls ---
+    const howtoLink = document.getElementById('openLoginHowto');
+    const howtoModal= document.getElementById('loginHowto');
+    const howtoClose= document.getElementById('closeLoginHowto');
+
+    function openHowto(){ howtoModal.classList.add('open'); howtoModal.setAttribute('aria-hidden','false'); }
+    function closeHowto(){ howtoModal.classList.remove('open'); howtoModal.setAttribute('aria-hidden','true'); }
+
+    howtoLink.addEventListener('click', (e)=>{ e.preventDefault(); openHowto(); });
+    howtoClose.addEventListener('click', closeHowto);
+    howtoModal.addEventListener('click', (e)=>{ if(e.target === howtoModal) closeHowto(); });
+
+    // --- Fake login (front‑end only) ---
+    const form = document.getElementById('loginForm');
+    const note = document.getElementById('loginNote');
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = form.email.value.trim();
+      const pwd = form.password.value;
+
+      // basic checks
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        note.textContent = 'Please enter a valid email.'; return;
+      }
+      if(pwd.length < 6){ note.textContent = 'Password must be at least 6 characters.'; return; }
+
+      // pretend to auth, then save a fake session token
+      const session = { user: { email }, token: Math.random().toString(36).slice(2), ts: Date.now() };
+      localStorage.setItem('demo_session', JSON.stringify(session));
+      note.textContent = 'Logged in (demo). Replace with Supabase or Firebase in production.';
+
+      // close after a beat
+      setTimeout(()=>{ closeModal(); alert('Welcome ' + email + '! (demo)'); }, 500);
+    });
+  </script>
+</body>
+</html>
