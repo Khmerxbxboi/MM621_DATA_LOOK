@@ -12,6 +12,12 @@ let SEA_DATA = [
 ];
 
 
+
+
+
+
+
+
 const SODARO = { accent:[6,182,255], dark:[26,30,38] };
 const colors = {
   barBase: 48,
@@ -36,20 +42,25 @@ const METRICS = [
   { key: "antiCorr",   label: "Anti-Corruption",explain: d => nf(1 - d.corruption,1,3) }
 ];
 let currentMetric = "score";
-let metricButtons = [];     // desktop chips
+let metricButtons = [];    
 let metricLabelGutter = 0;
 
-// ---------- Layout/State ----------
+
 let bgImg, logoImg;
 let isMobile = false;
 
-// desktop bars layout
+
+
+
+
+
+
 const chart = { baselineY: 0, barW: 56, spacing: 86, startX: 0, leftMargin: 520 };
 
-// donut (always left/top area)
+
 const donut = { cx: 260, cy: 320, r: 160, ir: 98 };
 
-// MOBILE bars panel (now BELOW the donut, full width)
+
 const rightPanel = { x: 0, y: 0, w: 0, h: 0, rowH: 20, gap: 8, pad: 10 };
 
 let barStates = [];
@@ -147,7 +158,7 @@ function reflow(){
     donut.r = min(180, chart.leftMargin * 0.42);
     donut.ir = donut.r * 0.61;
 
-    // Pill not used on desktop, but compute to keep code tidy
+
     layoutMetricPill();
   }
 }
@@ -161,11 +172,16 @@ function initBars(){
   }
 }
 
-// ---------- Draw ----------
+
+
+
+
 function draw(){
   drawBackgroundCover();
 
-  // Title / subtitle
+
+
+  
   noStroke(); fill(...colors.textPrimary); textAlign(LEFT,TOP);
   textSize(isMobile ? 18 : 20); textStyle(BOLD);
   text("Southeast Asia — Happiness (2019)", 16, 16);
@@ -297,13 +313,23 @@ function drawBarsDesktop(visualHoverIndex){
   }
 }
 
-// ---------- Bars: Mobile horizontal (BELOW donut, full width) ----------
+// ---------- Bars: Mobile horizontal (BELOW donut, full width) 
+
+
+
+
+
+
 function drawBarsMobileHorizontal(visualHoverIndex){
   // panel box backdrop
   noStroke(); fill(0, 90);
   rect(rightPanel.x - 2, rightPanel.y - 6, rightPanel.w + 4, rightPanel.h + 12, 10);
 
-  // compute row geometry
+
+
+
+
+  
   const rows = SEA_DATA.length;
   const totalH = rows * rightPanel.rowH + (rows - 1) * rightPanel.gap;
   // center rows within panel height (so even if panel is short, you see multiple rows)
